@@ -1,14 +1,13 @@
 import { RichText } from '@graphcms/rich-text-react-renderer'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import Quote from './Quote'
 function Hero({state}) {
-    console.log({state})
     const { backgroundColor, title, body, image } = state
     let rgba
     if (backgroundColor) {
         rgba = `rgba(${backgroundColor.rgba.r}, ${backgroundColor.rgba.g}, ${backgroundColor.rgba.b}, ${backgroundColor.rgba.a})`
     }
-    console.log({rgba})
     return (
         <section style={{backgroundColor: rgba}} className="dark:bg-gray-900">
     <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
@@ -37,14 +36,25 @@ export default function Page({props}) {
     }
     ,[props]
     )
-
-    console.log('in page')
     console.log({state})
     return (<>
         {loading ? 
             <div>Loading...</div> : 
             state?.pageSections?.map( (section, i) => {
-            console.log(section)
-            return <Hero key={i} state={section} />})}
-    </>)
+                switch (section.__typename) {
+                    case 'Hero':
+                        console.log("hero time")
+                        return <Hero key={i} state={section} />
+                        break;
+                
+                    case 'BlockQuote':
+                        console.log("quote time")
+                        return <Quote key={i} state={section} />
+                        break;
+                }
+            }
+            )
+}
+
+</>)
 }
